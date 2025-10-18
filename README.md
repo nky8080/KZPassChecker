@@ -1,4 +1,4 @@
-# Bunka-no-Mori Cultural Pass Facility Closure Information Agent
+# Kanazawa Cultural Zone Pass Facility Checker
 
 *Read this in other languages: [日本語](README.ja.md)*
 
