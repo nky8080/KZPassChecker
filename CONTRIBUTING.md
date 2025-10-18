@@ -1,318 +1,197 @@
-# 貢献ガイドライン
+# Contributing to Bunka-no-Mori Cultural Pass Facility Agent
 
-文化の森お出かけパス施設休館情報エージェントプロジェクトへの貢献をお考えいただき、ありがとうございます！このドキュメントでは、プロジェクトに貢献する方法について説明します。
+*Read this in other languages: [日本語](CONTRIBUTING.ja.md)*
 
-## 🤝 貢献の方法
+Thank you for your interest in contributing to the Bunka-no-Mori Cultural Pass Facility Agent! This document provides guidelines and information for contributors.
 
-### 1. Issue の報告
+## 🤝 How to Contribute
 
-バグを発見した場合や新機能の提案がある場合は、まずGitHubのIssuesページで既存のIssueを確認してください。
+### Reporting Issues
 
-#### バグレポート
+Before creating an issue, please:
 
-バグを報告する際は、以下の情報を含めてください：
+1. **Search existing issues** to avoid duplicates
+2. **Use the issue template** if available
+3. **Provide detailed information** including:
+   - Steps to reproduce the problem
+   - Expected vs actual behavior
+   - Environment details (Python version, OS, etc.)
+   - Error messages or logs
 
-- **環境情報**: OS、Pythonバージョン、依存関係のバージョン
-- **再現手順**: バグを再現するための詳細な手順
-- **期待される動作**: 本来どのような動作をするべきか
-- **実際の動作**: 実際に何が起こったか
-- **エラーメッセージ**: 関連するエラーメッセージやログ
+### Suggesting Enhancements
 
-#### 機能要望
+We welcome suggestions for new features or improvements:
 
-新機能を提案する際は、以下を含めてください：
+1. **Check existing feature requests** first
+2. **Describe the use case** clearly
+3. **Explain the expected benefit** to users
+4. **Consider implementation complexity**
 
-- **機能の概要**: 提案する機能の詳細な説明
-- **使用例**: どのような場面で使用されるか
-- **実装の提案**: 可能であれば実装方法の提案
-- **代替案**: 他の解決方法があるかどうか
+### Code Contributions
 
-### 2. プルリクエストの作成
+#### Development Setup
 
-#### 事前準備
+1. **Fork the repository** on GitHub
+2. **Clone your fork** locally:
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/bunka-no-mori-facility-agent.git
+   cd bunka-no-mori-facility-agent
+   ```
 
-1. **フォーク**: このリポジトリを自分のGitHubアカウントにフォーク
-2. **クローン**: フォークしたリポジトリをローカルにクローン
-3. **ブランチ作成**: 作業用のブランチを作成
+3. **Create a virtual environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
 
-```bash
-git clone https://github.com/your-username/repository-name.git
-cd repository-name
-git checkout -b feature/your-feature-name
-```
+4. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-#### 開発の流れ
+5. **Create a feature branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-1. **環境構築**: 開発環境をセットアップ（後述の開発環境セットアップを参照）
-2. **コード変更**: 必要な変更を実装
-3. **テスト**: 変更が正しく動作することを確認
-4. **コミット**: 適切なコミットメッセージで変更をコミット
-5. **プッシュ**: 変更をフォークしたリポジトリにプッシュ
-6. **プルリクエスト**: GitHubでプルリクエストを作成
+#### Making Changes
 
-#### プルリクエストのガイドライン
+1. **Follow the coding standards**:
+   - Use Python PEP 8 style guidelines
+   - Add docstrings to functions and classes
+   - Include type hints where appropriate
+   - Keep functions focused and modular
 
-- **明確なタイトル**: 変更内容が分かりやすいタイトルを付ける
-- **詳細な説明**: 何を変更したか、なぜ変更したかを説明
-- **関連Issue**: 関連するIssueがあれば参照
-- **テスト結果**: テストが通ることを確認
-- **ドキュメント更新**: 必要に応じてドキュメントも更新
+2. **Test your changes**:
+   - Ensure existing functionality still works
+   - Add tests for new features
+   - Test with multiple facilities if applicable
 
-## 🛠️ 開発環境のセットアップ
+3. **Update documentation**:
+   - Update README.md if needed
+   - Add or update docstrings
+   - Update USAGE.md for new features
 
-### 必要なソフトウェア
+#### Submitting Changes
 
-- **Python 3.8以上**
-- **Git**
-- **AWS CLI** (テスト用)
+1. **Commit your changes**:
+   ```bash
+   git add .
+   git commit -m "Add: Brief description of your changes"
+   ```
 
-### セットアップ手順
+2. **Push to your fork**:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
 
-1. **リポジトリのクローン**
+3. **Create a Pull Request**:
+   - Use a clear, descriptive title
+   - Describe what changes you made and why
+   - Reference any related issues
+   - Include screenshots if applicable
 
-```bash
-git clone https://github.com/your-username/repository-name.git
-cd repository-name
-```
+## 🏗️ Development Guidelines
 
-2. **仮想環境の作成**
+### Code Style
 
-```bash
-# Windows
-python -m venv .venv
-.venv\Scripts\activate
+- **Python Style**: Follow PEP 8 guidelines
+- **Naming Conventions**: Use descriptive variable and function names
+- **Comments**: Write clear, concise comments for complex logic
+- **Error Handling**: Include appropriate error handling and logging
 
-# macOS/Linux
-python -m venv .venv
-source .venv/bin/activate
-```
+### Facility Scraper Development
 
-3. **依存関係のインストール**
+When adding support for new facilities or updating existing scrapers:
 
-```bash
-# 基本依存関係
-pip install -r requirements.txt
+1. **Study the facility's website structure**
+2. **Implement robust scraping logic** that handles:
+   - Different page layouts
+   - Temporary changes in website structure
+   - Network timeouts and errors
+3. **Test thoroughly** with various dates and scenarios
+4. **Document the scraping approach** in code comments
 
-# 開発用依存関係（存在する場合）
-pip install -r requirements-dev.txt
-```
+### Testing
 
-4. **AWS設定（テスト用）**
+- **Manual Testing**: Test with real facility websites
+- **Edge Cases**: Consider holidays, maintenance periods, etc.
+- **Error Scenarios**: Test network failures, parsing errors
+- **Date Handling**: Test with various date formats and edge cases
 
-```bash
-aws configure
-# または環境変数で設定
-export AWS_ACCESS_KEY_ID="your-key"
-export AWS_SECRET_ACCESS_KEY="your-secret"
-export AWS_DEFAULT_REGION="us-west-2"
-```
-
-### 開発用ツール
-
-推奨する開発用ツール：
+## 🌐 Internationalization
 
-- **エディタ**: VS Code、PyCharm、または任意のテキストエディタ
-- **フォーマッター**: black、autopep8
-- **リンター**: flake8、pylint
-- **型チェッカー**: mypy
-
-## 📝 コーディング規約
-
-### Python コーディングスタイル
-
-- **PEP 8**: Python標準コーディング規約に準拠
-- **行の長さ**: 最大88文字（blackのデフォルト）
-- **インデント**: スペース4つ
-- **文字エンコーディング**: UTF-8
-
-### 命名規則
-
-- **変数・関数**: snake_case
-- **クラス**: PascalCase
-- **定数**: UPPER_SNAKE_CASE
-- **プライベート**: アンダースコア1つで開始
-
-### ドキュメント
-
-- **docstring**: すべての関数・クラスにdocstringを記載
-- **型ヒント**: 可能な限り型ヒントを使用
-- **コメント**: 複雑なロジックには適切なコメントを追加
-
-```python
-def check_facility_closure(facility_name: str, date: str) -> str:
-    """
-    指定された施設の休館情報を取得します。
-    
-    Args:
-        facility_name (str): 施設名
-        date (str): 確認したい日付（YYYY-MM-DD形式または自然言語）
-    
-    Returns:
-        str: 休館情報のJSON文字列
-    
-    Raises:
-        ValueError: 無効な施設名または日付形式の場合
-    """
-    # 実装...
-```
-
-## 🧪 テスト
+### Language Support
 
-### テストの実行
-
-```bash
-# 基本的なテスト
-python -c "from agent import check_facility_closure; print(check_facility_closure('金沢21世紀美術館', '2025-01-01'))"
-
-# 複数施設のテスト
-python -c "
-from config import FACILITIES
-from agent import check_facility_closure
-for facility in list(FACILITIES.keys())[:3]:
-    result = check_facility_closure(facility, '明日')
-    print(f'{facility}: OK')
-"
-```
+- **Primary Language**: English (for international accessibility)
+- **Secondary Language**: Japanese (for local users)
+- **Documentation**: Maintain both English and Japanese versions
 
-### テストケースの追加
+### Adding Translations
 
-新機能を追加する際は、適切なテストケースも追加してください：
+1. **Create `.ja.md` versions** of documentation files
+2. **Keep content synchronized** between language versions
+3. **Use appropriate cultural context** for each language
+4. **Test with native speakers** when possible
 
-```python
-def test_facility_closure_basic():
-    """基本的な施設休館情報取得のテスト"""
-    result = check_facility_closure('金沢21世紀美術館', '2025-01-01')
-    assert result is not None
-    assert 'facility' in result
-```
+## 🔒 Security Considerations
 
-## 🔍 コードレビュー
+### Responsible Disclosure
 
-### レビューのポイント
+If you discover security vulnerabilities:
 
-プルリクエストは以下の観点でレビューされます：
+1. **Do not create public issues** for security problems
+2. **Contact maintainers privately** first
+3. **Provide detailed information** about the vulnerability
+4. **Allow time for fixes** before public disclosure
 
-- **機能性**: 期待通りに動作するか
-- **コード品質**: 読みやすく保守しやすいか
-- **パフォーマンス**: 効率的な実装か
-- **セキュリティ**: セキュリティ上の問題はないか
-- **テスト**: 適切にテストされているか
-- **ドキュメント**: 必要なドキュメントが更新されているか
+### Scraping Ethics
 
-### レビューへの対応
+- **Respect robots.txt** files
+- **Implement reasonable delays** between requests
+- **Handle rate limiting** gracefully
+- **Monitor for website changes** that might indicate scraping issues
 
-- **建設的な議論**: レビューコメントには丁寧に対応
-- **迅速な修正**: 指摘された問題は速やかに修正
-- **説明**: 実装の理由や背景を適切に説明
+## 📋 Pull Request Checklist
 
-## 🏗️ プロジェクト構造
+Before submitting a pull request, ensure:
 
-### ディレクトリ構成
+- [ ] Code follows the project's style guidelines
+- [ ] Changes have been tested thoroughly
+- [ ] Documentation has been updated if necessary
+- [ ] Commit messages are clear and descriptive
+- [ ] No sensitive information (API keys, credentials) is included
+- [ ] Changes are focused and atomic (one feature per PR)
 
-```
-文化の森お出かけパス施設休館情報エージェント/
-├── agent.py                    # メインのAgentCoreエージェント
-├── facility_scraper.py         # 施設情報スクレイピング機能
-├── config.py                   # 設定ファイル
-├── deploy.py                   # デプロイメント機能
-├── setup.py                    # セットアップスクリプト
-├── requirements.txt            # 依存関係
-├── .bedrock_agentcore.yaml     # AgentCore設定
-├── Dockerfile                  # コンテナ設定
-├── README.md                   # プロジェクト説明
-├── CONTRIBUTING.md             # このファイル
-├── LICENSE                     # ライセンス
-└── .gitignore                  # Git除外設定
-```
+## 🎯 Priority Areas for Contribution
 
-### 主要コンポーネント
+We especially welcome contributions in these areas:
 
-- **agent.py**: メインのエージェント機能
-- **facility_scraper.py**: Webスクレイピング機能
-- **config.py**: 施設情報と設定の管理
+1. **Facility Coverage**: Adding support for new cultural facilities
+2. **Scraping Reliability**: Improving robustness of existing scrapers
+3. **Error Handling**: Better error messages and recovery mechanisms
+4. **Documentation**: Improving user guides and API documentation
+5. **Testing**: Adding comprehensive test coverage
+6. **Performance**: Optimizing scraping speed and resource usage
 
-## 🚀 リリースプロセス
+## 📞 Getting Help
 
-### バージョニング
+If you need help with contributing:
 
-- **セマンティックバージョニング**: MAJOR.MINOR.PATCH形式
-- **MAJOR**: 互換性のない変更
-- **MINOR**: 後方互換性のある機能追加
-- **PATCH**: 後方互換性のあるバグ修正
+- **Check the documentation**: [DEVELOPMENT.md](DEVELOPMENT.md) and [USAGE.md](USAGE.md)
+- **Open a discussion**: Use GitHub Discussions for questions
+- **Join the community**: Connect with other contributors
 
-### リリース手順
+## 🙏 Recognition
 
-1. **変更のテスト**: すべての変更が正しく動作することを確認
-2. **ドキュメント更新**: README.mdやその他のドキュメントを更新
-3. **バージョン更新**: 適切なバージョン番号を設定
-4. **タグ作成**: Gitタグを作成してリリース
+Contributors will be recognized in:
 
-## 📞 コミュニケーション
+- **README.md acknowledgments**
+- **Release notes** for significant contributions
+- **GitHub contributor statistics**
 
-### 質問・相談
-
-- **GitHub Issues**: バグ報告や機能要望
-- **GitHub Discussions**: 一般的な質問や議論
-- **プルリクエスト**: コードレビューや実装に関する議論
-
-### コミュニケーションのガイドライン
-
-- **丁寧な言葉遣い**: 建設的で尊重のあるコミュニケーション
-- **明確な説明**: 問題や提案を明確に説明
-- **日本語優先**: 日本語でのコミュニケーションを推奨
-- **英語対応**: 必要に応じて英語でも対応
-
-## 🎯 貢献の種類
-
-### コード貢献
-
-- **バグ修正**: 既存のバグの修正
-- **新機能**: 新しい機能の実装
-- **パフォーマンス改善**: 処理速度やメモリ使用量の最適化
-- **リファクタリング**: コードの構造改善
-
-### ドキュメント貢献
-
-- **README更新**: プロジェクト説明の改善
-- **コメント追加**: コード内のコメント充実
-- **使用例追加**: 実用的な使用例の追加
-- **翻訳**: 多言語対応
-
-### その他の貢献
-
-- **テスト追加**: テストケースの充実
-- **Issue管理**: Issueの整理や分類
-- **レビュー**: プルリクエストのレビュー
-- **普及活動**: プロジェクトの紹介や宣伝
-
-## 🏆 貢献者の認識
-
-### 貢献者リスト
-
-すべての貢献者はREADME.mdの貢献者セクションに記載されます。
-
-### 貢献の種類別認識
-
-- **コード貢献**: GitHubのコントリビューターとして表示
-- **ドキュメント貢献**: ドキュメント作成者として記載
-- **Issue報告**: 問題発見者として記載
-- **レビュー**: レビュアーとして記載
-
-## 📋 チェックリスト
-
-プルリクエストを作成する前に、以下をチェックしてください：
-
-- [ ] コードがPEP 8に準拠している
-- [ ] 適切なdocstringが記載されている
-- [ ] テストが通ることを確認した
-- [ ] 関連するドキュメントを更新した
-- [ ] コミットメッセージが適切である
-- [ ] 変更内容がIssueと関連している（該当する場合）
-
-## 🙏 謝辞
-
-このプロジェクトに貢献してくださるすべての方に感謝いたします。皆様の貢献により、より良いソフトウェアを作ることができます。
+Thank you for helping make cultural exploration in Ishikawa Prefecture more accessible and enjoyable!
 
 ---
 
-ご質問やご不明な点がございましたら、お気軽にIssueやDiscussionsでお尋ねください。皆様の貢献をお待ちしております！
+*By contributing to this project, you agree to abide by our code of conduct and licensing terms.*

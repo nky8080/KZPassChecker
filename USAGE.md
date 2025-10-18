@@ -1,161 +1,281 @@
-# 文化の森お出かけパス 施設休館情報エージェント 使用方法
+# Usage Guide
 
-## 🎉 デプロイ完了！
+*Read this in other languages: [日本語](USAGE.ja.md)*
 
-Amazon Bedrock AgentCoreを使用した文化の森お出かけパス施設休館情報エージェントが正常にデプロイされました。
+This guide provides comprehensive usage instructions for the Bunka-no-Mori Cultural Pass Facility Agent.
 
-## 📋 エージェント情報
-- **エージェント名**: ClosureCheckerAgent
-- **リージョン**: us-west-2
-- **メモリ**: 短期メモリ（STM）有効
+## 🚀 Quick Start
 
-## 🚀 基本的な使用方法
+### Basic Usage
 
-### 1. 施設一覧の確認
-```bash
-agentcore invoke '{"prompt": "利用可能な施設を教えてください"}'
+Once deployed, you can interact with the agent using natural language queries about facility closure information.
+
+### Example Queries
+
+```
+"Is the 21st Century Museum open on December 25th?"
+"Which facilities are closed on January 1st?"
+"Tell me about Kenrokuen Garden's operating hours for next Monday"
+"Are there any temporary closures at Suzuki Daisetsu Museum this week?"
+"What facilities can I visit on a Monday?"
 ```
 
-### 2. 特定施設の休館情報確認
-```bash
-agentcore invoke '{"prompt": "明日の石川県立美術館の休館情報を教えてください"}'
+## 🏛️ Facility Information
+
+### Supported Facilities
+
+The agent provides information for all 18 facilities covered by the Bunka-no-Mori Cultural Pass:
+
+#### Museums and Cultural Centers
+
+1. **Suzuki Daisetsu Museum** (鈴木大拙館)
+   - Regular closure: Mondays (next weekday if holiday)
+   - Special features: Philosophy and Zen culture
+
+2. **21st Century Museum of Contemporary Art, Kanazawa** (金沢21世紀美術館)
+   - Regular closure: Year-end/New Year only
+   - Special features: Contemporary art exhibitions
+
+3. **Ishikawa Museum of Living Crafts** (いしかわ生活工芸ミュージアム)
+   - Regular closure: Irregular schedule
+   - Special features: Traditional crafts and modern design
+
+4. **National Museum of Modern Art, Tokyo (Crafts Gallery)** (国立工芸館)
+   - Regular closure: Mondays (next weekday if holiday)
+   - Special features: Traditional and contemporary crafts
+
+#### Historic Sites and Traditional Architecture
+
+5. **Samurai House Ruins Nomura-ke** (武家屋敷跡 野村家)
+   - Regular closure: Year-end/New Year only
+   - Special features: Edo period samurai residence
+
+6. **National Important Cultural Property Seisonkaku** (国指定重要文化財 成巽閣)
+   - Regular closure: Irregular schedule
+   - Special features: Traditional Japanese architecture
+
+#### Gardens and Parks
+
+7. **Special Place of Scenic Beauty Kenrokuen Garden** (特別名勝 兼六園)
+   - Regular closure: Open year-round
+   - Special features: One of Japan's three most beautiful gardens
+
+8. **Kanazawa Castle Park** (金沢城公園)
+   - Regular closure: Open year-round
+   - Special features: Historic castle grounds and reconstructed buildings
+
+#### Specialized Museums
+
+9. **Kanazawa Phonograph Museum** (金沢蓄音器館)
+   - Regular closure: Mondays (next weekday if holiday)
+   - Special features: Antique phonographs and music history
+
+10. **Kanazawa Yasue Gold Leaf Museum** (金沢箔工芸館)
+    - Regular closure: Mondays (next weekday if holiday)
+    - Special features: Gold leaf crafts and techniques
+
+### Closure Types Handled
+
+The agent understands and reports various types of closures:
+
+- **Regular weekly closures** (e.g., "Closed Mondays")
+- **Holiday schedule variations** (e.g., "Open on holiday Mondays")
+- **Temporary closures** for maintenance or special events
+- **Exhibition changeover periods**
+- **Seasonal closures** (rare, but some facilities have seasonal schedules)
+- **Weather-related closures** (emergency situations)
+
+## 💬 Query Patterns
+
+### Date Formats
+
+The agent accepts various date formats:
+
+```
+"December 25th"
+"2024-12-25"
+"next Monday"
+"tomorrow"
+"this weekend"
+"January 1st, 2024"
 ```
 
-### 3. 全施設の一括確認
-```bash
-agentcore invoke '{"prompt": "明日の全施設の休館情報を教えてください"}'
+### Facility References
+
+You can refer to facilities in multiple ways:
+
+```
+# By full name
+"21st Century Museum of Contemporary Art, Kanazawa"
+
+# By common name
+"21st Century Museum"
+
+# By Japanese name
+"金沢21世紀美術館"
+
+# By category
+"art museums"
+"gardens"
+"historic sites"
 ```
 
-### 4. 特定日付での確認
-```bash
-agentcore invoke '{"prompt": "2025年1月15日の石川県立歴史博物館は開館していますか？"}'
+### Query Types
+
+#### Single Facility Queries
+```
+"Is Suzuki Daisetsu Museum open on Monday?"
+"What are the closure days for Kenrokuen Garden?"
 ```
 
-## 📅 対応する日付形式
-- 相対日付: "明日", "あした", "明後日", "あさって", "今日", "本日"
-- 日本語形式: "1月15日", "12月25日"
-- ISO形式: "2025-01-15"
-
-## 🏛️ 対象施設（全18施設）
-
-### 石川県立施設
-1. **石川県立美術館** (定休日: なし - 年末年始・展示替え以外は開館)
-2. **石川県立歴史博物館** (定休日: 月曜日)
-3. **石川県立伝統産業工芸館** (定休日: 木曜日 - 季節変動あり)
-4. **石川県立能楽堂** (定休日: 月曜日)
-5. **石川県文教会館** (定休日: 月曜日)
-
-### 金沢市立施設
-6. **金沢21世紀美術館** (定休日: 月曜日)
-7. **金沢市立中村記念美術館** (定休日: 月曜日)
-8. **金沢市立安江金箔工芸館** (定休日: 月曜日)
-9. **金沢市立前田土佐守家資料館** (定休日: 月曜日)
-10. **金沢市立玉川図書館近世史料館** (定休日: 月曜日)
-11. **金沢市老舗記念館** (定休日: 月曜日)
-12. **金沢市足軽資料館** (定休日: 月曜日)
-13. **金沢市寺島蔵人邸跡** (定休日: 月曜日)
-
-### その他の施設
-14. **石川県西田幾多郎記念哲学館** (定休日: 月曜日)
-15. **石川県九谷焼美術館** (定休日: 月曜日)
-16. **石川県輪島漆芸美術館** (定休日: 月曜日)
-17. **石川県珠洲焼資料館** (定休日: 月曜日)
-18. **石川県白山市立博物館** (定休日: 月曜日)
-
-## 🔧 管理コマンド
-
-### ステータス確認
-```bash
-agentcore status
+#### Multiple Facility Queries
+```
+"Which museums are open on January 1st?"
+"List all facilities closed on Mondays"
+"What can I visit this weekend?"
 ```
 
-### ログの確認
-```bash
-aws logs tail /aws/bedrock-agentcore/runtimes/ClosureCheckerAgent-w00rVb5O2o-DEFAULT --log-stream-name-prefix "2025/10/12/[runtime-logs]" --follow --no-paginate
+#### Planning Queries
+```
+"Plan a visit for next Tuesday - which facilities are available?"
+"I have three days in Kanazawa, what's the best schedule?"
 ```
 
-### CloudWatch ダッシュボード
-https://console.aws.amazon.com/cloudwatch/home?region=us-west-2#gen-ai-observability/agent-core
+## 🔍 Advanced Features
 
-## 🧪 テスト例
+### Detailed Information Requests
 
-### 基本テスト
-```bash
-# 施設一覧
-agentcore invoke '{"prompt": "利用可能な施設を教えてください"}'
-
-# 明日の全施設状況
-agentcore invoke '{"prompt": "明日の全施設の休館情報を教えてください"}'
-
-# 特定施設の確認
-agentcore invoke '{"prompt": "石川県立伝統産業工芸館は木曜日に開館していますか？"}'
+```
+"Tell me about temporary closures at all museums this month"
+"Are there any special exhibitions affecting regular hours?"
+"Which facilities have extended hours during holidays?"
 ```
 
-### 日本語での自然な質問
-```bash
-agentcore invoke '{"prompt": "来週の月曜日に美術館に行きたいのですが、開いていますか？"}'
-agentcore invoke '{"prompt": "年末年始の施設の営業状況を教えて"}'
-agentcore invoke '{"prompt": "今度の祝日はどの施設が開いていますか？"}'
+### Comparative Queries
+
+```
+"Compare the opening schedules of art museums"
+"Which facilities are most reliable for weekend visits?"
 ```
 
-## 📊 機能詳細
+### Historical Information
 
-### 1. 定休日チェック
-- 各施設の定休日を自動判定
-- 曜日ベースの休館日を確認
-
-### 2. 臨時休館情報
-- 各施設の公式サイトから最新情報を取得
-- 工事、イベント、祝日等による臨時休館を検出
-
-### 3. 総合判定
-- 定休日と臨時休館の両方を考慮
-- 開館/休館の理由を明確に表示
-
-## 🔄 メンテナンス
-
-### 設定の更新
-施設情報やURLを更新する場合は、`config.py`を編集後に再デプロイ：
-```bash
-agentcore launch
+```
+"Has the 21st Century Museum been closed recently?"
+"What were the closure patterns last month?"
 ```
 
-### エージェントの削除
-```bash
-agentcore destroy
+## 📅 Planning Your Visit
+
+### Best Practices
+
+1. **Check Multiple Days**: Ask about several days to find the best visiting time
+2. **Consider Alternatives**: If your preferred facility is closed, ask for similar options
+3. **Plan for Holidays**: Japanese holidays can affect schedules significantly
+4. **Check for Updates**: Ask about recent changes or temporary closures
+
+### Sample Planning Conversation
+
+```
+User: "I'm visiting Kanazawa next Monday. What cultural facilities can I visit?"
+
+Agent: "Next Monday, most facilities will be closed due to regular Monday closures. However, these facilities will be open:
+- 21st Century Museum of Contemporary Art (open daily except year-end)
+- Kenrokuen Garden (open year-round)
+- Kanazawa Castle Park (open year-round)
+- Samurai House Ruins Nomura-ke (open daily except year-end)
+
+Would you like me to suggest an alternative day when more facilities are available?"
+
+User: "What about Tuesday?"
+
+Agent: "Tuesday is an excellent choice! All 18 facilities should be open, including:
+- Suzuki Daisetsu Museum
+- National Museum of Modern Art (Crafts Gallery)
+- All the museums that close on Mondays
+Plus all the facilities that are open on Mondays.
+
+Would you like me to suggest a visiting route or provide more details about specific facilities?"
 ```
 
-## ⚠️ 注意事項
+## 🛠️ Technical Usage
 
-1. **最新情報の確認**: エージェントは各施設の公式サイトから情報を取得しますが、最終的な確認は各施設に直接お問い合わせください。
+### API Integration
 
-2. **ネットワーク依存**: 施設の公式サイトにアクセスできない場合、臨時休館情報の取得ができない場合があります。
+If you're integrating the agent into your own application:
 
-3. **料金**: AgentCoreの使用には料金が発生します。詳細はAWS料金表をご確認ください。
+```python
+from agent import facility_agent
 
-## 🆘 トラブルシューティング
-
-### メモリエラーが発生する場合
-```bash
-agentcore status
-```
-でメモリの状態を確認し、"STM only"と表示されるまで待機してください。
-
-### 施設情報が取得できない場合
-一部の施設サイトがアクセスできない場合がありますが、定休日情報は正常に表示されます。
-
-### ログでエラーを確認
-```bash
-aws logs tail /aws/bedrock-agentcore/runtimes/ClosureCheckerAgent-w00rVb5O2o-DEFAULT --log-stream-name-prefix "2025/10/12/[runtime-logs]" --since 1h --no-paginate
+# Query the agent
+response = facility_agent.query("Is the museum open tomorrow?")
+print(response)
 ```
 
-## 🎯 今後の拡張可能性
+### Batch Queries
 
-1. **施設の追加**: `config.py`に新しい施設を追加
-2. **通知機能**: 特定日の休館情報をメール/Slack通知
-3. **カレンダー連携**: Google Calendar等との連携
-4. **多言語対応**: 英語、中国語等の対応
+For multiple queries:
+
+```python
+queries = [
+    "Suzuki Daisetsu Museum status for 2024-01-15",
+    "21st Century Museum status for 2024-01-15",
+    "Kenrokuen Garden status for 2024-01-15"
+]
+
+results = [facility_agent.query(q) for q in queries]
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### "I don't have current information"
+- The agent may not have recent data for a specific facility
+- Try asking about a different date or facility
+- Check if the facility website is accessible
+
+#### Unclear responses
+- Be more specific about the date and facility
+- Use full facility names when possible
+- Ask follow-up questions for clarification
+
+#### Outdated information
+- The agent scrapes real-time data, but websites may have delays
+- For critical visits, consider calling the facility directly
+- Report persistent inaccuracies as issues
+
+### Getting Better Results
+
+1. **Be specific**: Include exact dates and facility names
+2. **Ask follow-ups**: Request clarification if needed
+3. **Use context**: Mention your visit plans for better recommendations
+4. **Check multiple sources**: For important visits, verify with official websites
+
+## 📞 Support and Feedback
+
+### Getting Help
+
+- **Documentation**: Check [DEVELOPMENT.md](DEVELOPMENT.md) for technical details
+- **Issues**: Report bugs or inaccuracies on GitHub
+- **Feature Requests**: Suggest improvements via GitHub Issues
+
+### Providing Feedback
+
+Help improve the agent by reporting:
+- Inaccurate closure information
+- Facilities with changed schedules
+- Suggestions for new features
+- Usability improvements
+
+## 🌟 Tips for Best Experience
+
+1. **Plan Ahead**: Check schedules a few days before your visit
+2. **Have Alternatives**: Always have backup plans for closed facilities
+3. **Consider Seasons**: Some facilities may have seasonal variations
+4. **Check Weather**: Outdoor facilities may close during severe weather
+5. **Verify Critical Information**: For important visits, double-check with official sources
 
 ---
 
-文化の森お出かけパスでの素敵な文化体験をお楽しみください！🎨🏛️
+*Enjoy exploring Ishikawa Prefecture's rich cultural heritage with confidence!*
