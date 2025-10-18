@@ -1,4 +1,4 @@
-# Bunka-no-Mori Cultural Pass Facility Closure Information Agent
+# Kanazawa Cultural Zone Pass Facility Checker
 
 *Read this in other languages: [日本語](README.ja.md)*
 
@@ -129,7 +129,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions, issues, or suggestions:
 
-- Open an [Issue](https://github.com/YOUR_USERNAME/bunka-no-mori-facility-agent/issues)
+- Open an Issue
 - Check the [Documentation](DEVELOPMENT.md)
 - Review [Usage Examples](USAGE.md)
 
