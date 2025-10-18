@@ -129,7 +129,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions, issues, or suggestions:
 
-- Open an [Issue](https://github.com/YOUR_USERNAME/bunka-no-mori-facility-agent/issues)
+- Open an Issue
 - Check the [Documentation](DEVELOPMENT.md)
 - Review [Usage Examples](USAGE.md)
 
