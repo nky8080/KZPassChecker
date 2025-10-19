@@ -130,7 +130,16 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. AWS設定
+### 4. 環境変数の設定
+
+```bash
+export AWS_REGION=us-west-2
+export MODEL_ID=us.anthropic.claude-3-7-sonnet-20250219-v1:0
+export FALLBACK_MODEL_ID=anthropic.claude-3-haiku-20240307-v1:0
+export BEDROCK_AGENTCORE_MEMORY_ID=your-memory-id  # オプション
+```
+
+### 5. AWS設定
 
 #### AWS CLIの設定
 
@@ -143,6 +152,12 @@ aws configure
 - **AWS Secret Access Key**: あなたのシークレットキー
 - **Default region name**: `us-west-2`
 - **Default output format**: `json`
+
+または環境変数で設定：
+```bash
+export AWS_ACCESS_KEY_ID=your-access-key
+export AWS_SECRET_ACCESS_KEY=your-secret-key
+```
 
 #### Bedrockモデルアクセスの有効化
 

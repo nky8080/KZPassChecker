@@ -1,0 +1,126 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'API Gateway CORS configuration for Kanazawa Cultural Facility Agent Demo'
+
+Parameters:
+  LambdaFunctionArn:
+    Type: String
+    Description: ARN of the Lambda function
+  AllowedOrigins:
+    Type: CommaDelimitedList
+    Default: "*"
+    Description: Comma-delimited list of allowed origins for CORS
+
+Resources:
+  # API Gateway REST API
+  CulturalFacilityAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: kanazawa-cultural-facility-demo-api
+      Description: API for Kanazawa Cultural Facility Agent Demo
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Policy:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: 'execute-api:Invoke'
+            Resource: '*'
+
+  # Query resource
+  QueryResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref CulturalFacilityAPI
+      ParentId: !GetAtt CulturalFacilityAPI.RootResourceId
+      PathPart: query
+
+  # POST method for queries
+  QueryPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref CulturalFacilityAPI
+      ResourceId: !Ref QueryResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunctionArn}/invocations'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+
+  # OPTIONS method for CORS preflight
+  QueryOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref CulturalFacilityAPI
+      ResourceId: !Ref QueryResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'"
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Max-Age: "'86400'"
+            ResponseTemplates:
+              application/json: '{"statusCode": 200}'
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Max-Age: true
+
+  # Lambda permission for API Gateway
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LambdaFunctionArn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub '${CulturalFacilityAPI}/*/POST/query'
+
+  # API Gateway deployment
+  APIDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - QueryPostMethod
+      - QueryOptionsMethod
+    Properties:
+      RestApiId: !Ref CulturalFacilityAPI
+      StageName: prod
+      StageDescription:
+        Variables:
+          cors_enabled: 'true'
+
+Outputs:
+  APIEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${CulturalFacilityAPI}.execute-api.${AWS::Region}.amazonaws.com/prod'
+    Export:
+      Name: !Sub '${AWS::StackName}-APIEndpoint'
+
+  APIId:
+    Description: API Gateway ID
+    Value: !Ref CulturalFacilityAPI
+    Export:
+      Name: !Sub '${AWS::StackName}-APIId'

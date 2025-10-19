@@ -64,9 +64,23 @@ cd bunka-no-mori-facility-agent
 pip install -r requirements.txt
 ```
 
-3. Configure AWS credentials and region in `config.py`
+3. Set up environment variables:
+```bash
+export AWS_REGION=us-west-2
+export MODEL_ID=us.anthropic.claude-3-7-sonnet-20250219-v1:0
+export FALLBACK_MODEL_ID=anthropic.claude-3-haiku-20240307-v1:0
+export BEDROCK_AGENTCORE_MEMORY_ID=your-memory-id  # Optional
+```
 
-4. Deploy to Amazon Bedrock AgentCore:
+4. Configure AWS credentials (using AWS CLI or environment variables):
+```bash
+aws configure
+# or set environment variables:
+export AWS_ACCESS_KEY_ID=your-access-key
+export AWS_SECRET_ACCESS_KEY=your-secret-key
+```
+
+5. Deploy to Amazon Bedrock AgentCore:
 ```bash
 python deploy.py
 ```

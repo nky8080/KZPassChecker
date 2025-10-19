@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanazawa Cultural Zone Pass Facility Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .demo-header p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 400;
+        }
+
+        .demo-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .query-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .query-section h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #queryInput {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        #queryInput:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Task 4.1: Input validation styles */
+        #queryInput.validation-error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        #queryInput.validation-error:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+        }
+
+        #queryInput.validation-warning {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+        }
+
+        #queryInput.validation-warning:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+        }
+
+        .validation-hint {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .validation-hint-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .validation-hint-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        #submitBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        #submitBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        #submitBtn:active {
+            transform: translateY(0);
+        }
+
+        #submitBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .examples-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .examples-section h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .example-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .example-button {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            text-align: left;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .example-button:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .response-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            min-height: 200px;
+        }
+
+        .response-section h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #loadingIndicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        #responseContent {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .response-meta {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.9rem;
+            color: #6c757d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Task 4.3: Enhanced error display UI styles */
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+            animation: errorSlideIn 0.3s ease-out;
+        }
+
+        @keyframes errorSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-content {
+            display: flex;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        .error-icon {
+            font-size: 1.3rem;
+            margin-right: 12px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .error-details {
+            flex: 1;
+        }
+
+        .error-text {
+            display: block;
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .error-action-btn {
+            background: #721c24;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .error-action-btn:hover {
+            background: #5a161d;
+            transform: translateY(-1px);
+        }
+
+        .error-action-btn.secondary {
+            background: transparent;
+            color: #721c24;
+            border: 1px solid #721c24;
+        }
+
+        .error-action-btn.secondary:hover {
+            background: #721c24;
+            color: white;
+        }
+
+        .error-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #721c24;
+            padding: 0;
+            margin-left: 15px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .error-close:hover {
+            background: rgba(114, 28, 36, 0.1);
+        }
+
+        /* Different error types */
+        .error-message.error-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+        }
+
+        .error-message.error-warning .error-close,
+        .error-message.error-warning .error-action-btn {
+            color: #856404;
+            border-color: #856404;
+        }
+
+        .error-message.error-warning .error-action-btn:not(.secondary) {
+            background: #856404;
+            color: white;
+        }
+
+        .error-message.error-warning .error-action-btn:not(.secondary):hover {
+            background: #6c5200;
+        }
+
+        .error-message.error-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-color: #bee5eb;
+            box-shadow: 0 4px 12px rgba(23, 162, 184, 0.15);
+        }
+
+        .error-message.error-info .error-close,
+        .error-message.error-info .error-action-btn {
+            color: #0c5460;
+            border-color: #0c5460;
+        }
+
+        .error-message.error-info .error-action-btn:not(.secondary) {
+            background: #0c5460;
+            color: white;
+        }
+
+        .error-message.error-info .error-action-btn:not(.secondary):hover {
+            background: #094349;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .demo-container {
+                padding: 15px;
+            }
+
+            .demo-header {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+
+            .demo-header h1 {
+                font-size: 2rem;
+            }
+
+            .demo-header p {
+                font-size: 1rem;
+            }
+
+            .query-section,
+            .examples-section,
+            .response-section {
+                padding: 20px;
+            }
+
+            .example-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            #queryInput {
+                min-height: 100px;
+            }
+
+            .response-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .demo-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .demo-header p {
+                font-size: 0.9rem;
+            }
+
+            .query-section,
+            .examples-section,
+            .response-section {
+                padding: 15px;
+            }
+
+            #submitBtn {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .demo-container {
+                box-shadow: none;
+            }
+
+            .demo-header,
+            .query-section,
+            .examples-section,
+            .response-section {
+                background: white;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            #submitBtn,
+            .example-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo-container">
+        <header class="demo-header">
+            <h1>Kanazawa Cultural Zone Pass Facility Checker</h1>
+            <p>Easily check facility closure information and opening hours</p>
+        </header>
+
+        <main class="demo-main">
+            <section class="query-section">
+                <h3>Enter Your Question</h3>
+                <textarea id="queryInput"
+                    placeholder="Example: Is the 21st Century Museum open on December 25th?"></textarea>
+                <button id="submitBtn">Ask Question</button>
+            </section>
+
+            <section class="examples-section">
+                <h3>Sample Questions</h3>
+                <div class="example-buttons">
+                    <!-- Sample query buttons will be generated here by JavaScript -->
+                </div>
+            </section>
+
+            <section class="response-section">
+                <h3>Response</h3>
+                <!-- Task 4.3: Enhanced error display UI -->
+                <div id="errorMessage" class="error-message hidden">
+                    <div class="error-content">
+                        <span class="error-icon">⚠️</span>
+                        <div class="error-details">
+                            <span class="error-text"></span>
+                            <div class="error-actions hidden">
+                                <button class="error-action-btn" id="retryBtn">Retry</button>
+                                <button class="error-action-btn secondary" id="fallbackBtn">Continue in Demo
+                                    Mode</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="error-close" onclick="hideError()">×</button>
+                </div>
+
+                <div id="loadingIndicator" class="hidden">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Retrieving facility information...</p>
+                </div>
+
+                <div id="responseContent"></div>
+
+                <div id="responseMeta" class="response-meta hidden">
+                    <span id="responseTime"></span>
+                    <span id="responseTimestamp"></span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // API Configuration
+        function getAPIEndpoint() {
+            // Check for environment-specific configuration
+            const hostname = window.location.hostname;
+
+            // Production API Gateway endpoint (configured during deployment)
+            if (hostname.includes('s3') || hostname.includes('amazonaws.com') || hostname !== 'localhost') {
+                // Production API Gateway endpoint - replace with your actual endpoint
+                return 'https://YOUR_API_ID.execute-api.us-west-2.amazonaws.com/prod/query';
+            }
+
+            // Local development endpoint
+            return 'http://localhost:3000/api/query';
+        }
+
+        // Basic JavaScript structure for future implementation
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Demo interface loaded');
+            console.log('API Endpoint:', getAPIEndpoint());
+
+            // Initialize sample query buttons (placeholder for task 2)
+            initializeSampleQueries();
+
+            // Set up event listeners (placeholder for task 3)
+            setupEventListeners();
+        });
+
+        // Sample query data structure (Task 2.1)
+        const sampleQueries = [
+            // Specific date queries
+            "Is the 21st Century Museum open on December 25th?",
+            "Is Kenrokuen Garden open today?",
+            "Is the Ishikawa Prefectural Museum of Art closed tomorrow?",
+            "Is the Kanazawa Noh Museum open next Monday?",
+
+            // General questions
+            "Which facilities are open next Monday?",
+            "What cultural facilities are open during New Year holidays?",
+            "Are there any facilities closed today?",
+            "Which facilities are open on public holidays?",
+
+            // Facility-specific queries
+            "What are the opening hours of D.T. Suzuki Museum?",
+            "When is Nakamura Memorial Museum closed?",
+            "What are the closure days for Ishikawa Prefectural Museum of History this month?",
+
+            // Additional queries
+            "What are the general opening hours for Kanazawa museums?",
+            "Are there any special exhibitions at the 21st Century Museum?",
+            "Tell me about facilities that are closed today"
+        ];
+
+        function initializeSampleQueries() {
+            // Task 2.2: Generate sample query buttons dynamically
+            const exampleButtonsContainer = document.querySelector('.example-buttons');
+
+            // Clear any existing buttons
+            exampleButtonsContainer.innerHTML = '';
+
+            // Generate buttons for each sample query
+            sampleQueries.forEach((query, index) => {
+                const button = document.createElement('button');
+                button.className = 'example-button';
+                button.textContent = query;
+                button.setAttribute('data-query', query);
+                button.setAttribute('data-index', index);
+
+                // Add click handler (Task 2.3 will implement the actual functionality)
+                button.addEventListener('click', handleSampleQueryClick);
+
+                exampleButtonsContainer.appendChild(button);
+            });
+
+            console.log('Generated', sampleQueries.length, 'sample query buttons');
+        }
+
+        // Task 2.3: Click handler for sample query buttons
+        function handleSampleQueryClick(event) {
+            const query = event.target.getAttribute('data-query');
+            const queryInput = document.getElementById('queryInput');
+
+            // Auto-populate the input field with the selected query
+            queryInput.value = query;
+
+            // Focus on the input field for user convenience
+            queryInput.focus();
+
+            // Scroll to the input field if needed (for mobile devices)
+            queryInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            console.log('Sample query selected:', query);
+        }
+
+        // Task 4.1: Input validation function
+        function validateQueryInput(query) {
+            // Check for empty input
+            if (!query || typeof query !== 'string') {
+                return {
+                    isValid: false,
+                    errorMessage: 'Please enter a question'
+                };
+            }
+
+            const trimmedQuery = query.trim();
+
+            // Check for empty trimmed input
+            if (trimmedQuery.length === 0) {
+                return {
+                    isValid: false,
+                    errorMessage: 'Please enter a question'
+                };
+            }
+
+            // Check minimum length
+            if (trimmedQuery.length < 3) {
+                return {
+                    isValid: false,
+                    errorMessage: 'Question must be at least 3 characters long'
+                };
+            }
+
+            // Check maximum length
+            if (trimmedQuery.length > 1000) {
+                return {
+                    isValid: false,
+                    errorMessage: 'Question must be 1000 characters or less'
+                };
+            }
+
+            // Check for potentially harmful content
+            const suspiciousPatterns = [
+                /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+                /javascript:/gi,
+                /on\w+\s*=/gi,
+                /<iframe/gi,
+                /<object/gi,
+                /<embed/gi
+            ];
+
+            for (const pattern of suspiciousPatterns) {
+                if (pattern.test(trimmedQuery)) {
+                    return {
+                        isValid: false,
+                        errorMessage: 'Invalid characters detected. Please review your question'
+                    };
+                }
+            }
+
+            // Check for excessive special characters (potential spam)
+            const specialCharCount = (trimmedQuery.match(/[!@#$%^&*()_+={}\[\]|\\:";'<>?,./]/g) || []).length;
+            const specialCharRatio = specialCharCount / trimmedQuery.length;
+
+            if (specialCharRatio > 0.5) {
+                return {
+                    isValid: false,
+                    errorMessage: 'Too many special characters. Please use normal question format'
+                };
+            }
+
+            // Check for repeated characters (potential spam)
+            const repeatedCharPattern = /(.)\1{10,}/;
+            if (repeatedCharPattern.test(trimmedQuery)) {
+                return {
+                    isValid: false,
+                    errorMessage: 'Too many repeated characters. Please review your question'
+                };
+            }
+
+            return {
+                isValid: true,
+                errorMessage: null,
+                cleanQuery: trimmedQuery
+            };
+        }
+
+        // Task 4.2: Network error handling with timeout and retry logic
+        async function queryAgent(query) {
+            const maxRetries = 2;
+            const timeoutMs = 30000; // 30 seconds
+
+            for (let attempt = 1; attempt <= maxRetries + 1; attempt++) {
+                try {
+                    // Use pre-validated query
+                    const trimmedQuery = query;
+
+                    // API Gateway endpoint - will be configured during deployment
+                    // This should be updated to match the deployed API Gateway endpoint
+                    const apiEndpoint = getAPIEndpoint();
+
+                    const requestBody = {
+                        query: trimmedQuery,
+                        timestamp: new Date().toISOString(),
+                        attempt: attempt
+                    };
+
+                    console.log(`Sending query to agent (attempt ${attempt}):`, requestBody);
+
+                    // Record request start time for response time calculation
+                    const requestStartTime = Date.now();
+
+                    // Create AbortController for timeout handling
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+                    try {
+                        // Simulate API call with fetch and timeout
+                        const response = await fetch(apiEndpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody),
+                            signal: controller.signal
+                        });
+
+                        clearTimeout(timeoutId);
+
+                        if (!response.ok) {
+                            throw new NetworkError(`API Error: ${response.status} ${response.statusText}`, response.status, 'api_error');
+                        }
+
+                        const responseData = await response.json();
+
+                        // Validate response structure
+                        if (!responseData.response) {
+                            throw new NetworkError('Invalid response format from API', 500, 'invalid_response');
+                        }
+
+                        // Calculate response time if not provided by API
+                        const calculatedResponseTime = responseData.responseTime || ((Date.now() - requestStartTime) / 1000);
+
+                        return {
+                            response: responseData.response,
+                            responseTime: calculatedResponseTime,
+                            timestamp: responseData.timestamp || new Date().toISOString(),
+                            error: null
+                        };
+
+                    } catch (fetchError) {
+                        clearTimeout(timeoutId);
+
+                        if (fetchError.name === 'AbortError') {
+                            throw new NetworkError('Request timed out', 408, 'timeout');
+                        }
+
+                        throw fetchError;
+                    }
+
+                } catch (error) {
+                    console.error(`Error querying agent (attempt ${attempt}):`, error);
+
+                    // Determine if we should retry
+                    const shouldRetry = attempt <= maxRetries && isRetryableError(error);
+
+                    if (!shouldRetry) {
+                        // Final attempt failed or non-retryable error
+                        const errorInfo = handleNetworkError(error);
+
+                        // For demo purposes, return a simulated response when API is not available
+                        if (errorInfo.shouldFallback) {
+                            console.log('Falling back to simulated response');
+                            return simulateAgentResponse(query);
+                        }
+
+                        return {
+                            response: null,
+                            responseTime: 0,
+                            timestamp: new Date().toISOString(),
+                            error: errorInfo.message
+                        };
+                    }
+
+                    // Wait before retry (exponential backoff)
+                    const retryDelay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+                    console.log(`Retrying in ${retryDelay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                }
+            }
+        }
+
+        // Task 4.2: Custom error class for network errors
+        class NetworkError extends Error {
+            constructor(message, status, type) {
+                super(message);
+                this.name = 'NetworkError';
+                this.status = status;
+                this.type = type;
+            }
+        }
+
+        // Task 4.2: Determine if error is retryable
+        function isRetryableError(error) {
+            if (error instanceof NetworkError) {
+                // Retry on server errors and timeouts, but not client errors
+                return error.status >= 500 || error.type === 'timeout' || error.type === 'network_error';
+            }
+
+            // Retry on network connectivity issues
+            if (error.message.includes('Failed to fetch') ||
+                error.message.includes('NetworkError') ||
+                error.message.includes('fetch')) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Task 4.2: Enhanced network error handling
+        function handleNetworkError(error) {
+            let message = '';
+            let shouldFallback = false;
+
+            if (error instanceof NetworkError) {
+                switch (error.type) {
+                    case 'timeout':
+                        message = 'Request timed out. Please check your network connection and try again.';
+                        shouldFallback = true;
+                        break;
+                    case 'api_error':
+                        if (error.status === 429) {
+                            message = 'Too many requests. Please wait and try again later.';
+                        } else if (error.status === 503) {
+                            message = 'Service temporarily unavailable. Please try again later.';
+                            shouldFallback = true;
+                        } else if (error.status >= 500) {
+                            message = 'Server error occurred. Please try again later.';
+                            shouldFallback = true;
+                        } else if (error.status === 400) {
+                            message = 'There is an issue with the question format. Please review your question.';
+                        } else if (error.status === 401) {
+                            message = 'Authentication error occurred. Please reload the page.';
+                        } else if (error.status === 403) {
+                            message = 'Access denied. Please try again later.';
+                        } else {
+                            message = `API error occurred (${error.status}). Please try again later.`;
+                            shouldFallback = true;
+                        }
+                        break;
+                    case 'invalid_response':
+                        message = 'Received invalid response from server. Please try again.';
+                        shouldFallback = true;
+                        break;
+                    default:
+                        message = 'Network error occurred. Please check your connection and try again.';
+                        shouldFallback = true;
+                }
+            } else if (error.message.includes('Failed to fetch') ||
+                error.message.includes('NetworkError') ||
+                error.name === 'TypeError') {
+                message = 'Network connection error occurred. Please check your internet connection.';
+                shouldFallback = true;
+            } else {
+                message = 'An unexpected error occurred. Please wait a moment and try again.';
+                shouldFallback = true;
+            }
+
+            return { message, shouldFallback };
+        }
+
+        // Simulate agent response for demo purposes
+        function simulateAgentResponse(query) {
+            const startTime = Date.now();
+
+            // Simulate processing delay
+            const simulatedDelay = Math.random() * 2000 + 1000; // 1-3 seconds
+
+            let simulatedResponse;
+            const lowerQuery = query.toLowerCase();
+
+            if (lowerQuery.includes('21世紀美術館') || lowerQuery.includes('21st century museum')) {
+                simulatedResponse = `Information about the 21st Century Museum of Contemporary Art, Kanazawa:
+
+Current operating status:
+- Opening hours: 10:00-18:00 (until 20:00 on Fridays and Saturdays)
+- Closed: Mondays (or the following weekday if Monday is a holiday), New Year period
+- Special exhibitions: Currently ongoing exhibitions available
+
+If you need detailed information about specific dates, please let me know the exact date you're planning to visit.`;
+            } else if (lowerQuery.includes('兼六園') || lowerQuery.includes('kenrokuen')) {
+                simulatedResponse = `Information about Kenrokuen Garden:
+
+Current operating status:
+- Opening hours: 7:00-18:00 (8:00-17:00 from October 16 to end of February)
+- Closed: Open year-round
+- Admission fee: Adults 320 yen, Children 100 yen
+- Special note: Some areas may have viewing restrictions during snow protection installation period
+
+Kenrokuen Garden is basically open year-round, so you can enjoy it anytime.`;
+            } else if (lowerQuery.includes('開いている') || lowerQuery.includes('open')) {
+                simulatedResponse = `Here are the major cultural facilities currently open:
+
+Facilities open today:
+- 21st Century Museum of Contemporary Art, Kanazawa (10:00-18:00)
+- Kenrokuen Garden (8:00-17:00)
+- Ishikawa Prefectural Museum of Art (9:30-18:00)
+- Kanazawa Noh Museum (10:00-18:00)
+- D.T. Suzuki Museum (9:30-17:00)
+
+For detailed opening hours and special exhibitions of each facility, please inquire individually.`;
+            } else {
+                simulatedResponse = `Thank you for your question "${query}".
+
+I apologize, but I cannot currently retrieve specific information for this question. You can get more detailed information by:
+
+1. Including specific facility names in your question
+2. Specify particular dates
+3. Ask for specific information like "opening hours" or "closure days"
+
+Example: "Is the 21st Century Museum open on December 25th?"
+Example: "Which facilities are open next Monday?"
+
+Please feel free to ask again.`;
+            }
+
+            const endTime = Date.now();
+            const actualResponseTime = (endTime - startTime) / 1000;
+
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve({
+                        response: simulatedResponse,
+                        responseTime: actualResponseTime,
+                        timestamp: new Date().toISOString(),
+                        error: null
+                    });
+                }, simulatedDelay);
+            });
+        }
+
+        function setupEventListeners() {
+            // Set up submit button click handler
+            const submitBtn = document.getElementById('submitBtn');
+            const queryInput = document.getElementById('queryInput');
+
+            submitBtn.addEventListener('click', handleQuerySubmit);
+
+            // Set up Enter key handler for textarea
+            queryInput.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    handleQuerySubmit();
+                }
+            });
+
+            // Task 4.1: Add real-time input validation feedback
+            queryInput.addEventListener('input', handleInputValidation);
+            queryInput.addEventListener('blur', handleInputValidation);
+
+            // Task 4.3: Add keyboard support for error dismissal
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    const errorMessage = document.getElementById('errorMessage');
+                    if (!errorMessage.classList.contains('hidden')) {
+                        hideError();
+                    }
+                }
+            });
+
+            console.log('Event listeners set up for API integration');
+        }
+
+        // Task 4.1: Real-time input validation feedback
+        function handleInputValidation(event) {
+            const queryInput = event.target;
+            const query = queryInput.value;
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Clear any existing validation styling
+            queryInput.classList.remove('validation-error', 'validation-warning');
+
+            if (query.trim().length === 0) {
+                // Empty input - neutral state
+                submitBtn.disabled = false;
+                return;
+            }
+
+            const validationResult = validateQueryInput(query);
+
+            if (!validationResult.isValid) {
+                // Invalid input - show error styling
+                queryInput.classList.add('validation-error');
+                submitBtn.disabled = true;
+
+                // Show validation error in a subtle way (not full error display)
+                if (event.type === 'blur') {
+                    showValidationHint(validationResult.errorMessage);
+                }
+            } else {
+                // Valid input
+                queryInput.classList.remove('validation-error');
+                submitBtn.disabled = false;
+                hideValidationHint();
+
+                // Show warning for long queries
+                if (query.trim().length > 500) {
+                    queryInput.classList.add('validation-warning');
+                    if (event.type === 'blur') {
+                        showValidationHint('Long question detected. Consider making it more concise', 'warning');
+                    }
+                }
+            }
+        }
+
+        // Task 4.1: Validation hint display (subtle feedback)
+        function showValidationHint(message, type = 'error') {
+            let hintElement = document.getElementById('validationHint');
+
+            if (!hintElement) {
+                hintElement = document.createElement('div');
+                hintElement.id = 'validationHint';
+                hintElement.className = 'validation-hint';
+
+                const querySection = document.querySelector('.query-section');
+                const submitBtn = document.getElementById('submitBtn');
+                querySection.insertBefore(hintElement, submitBtn);
+            }
+
+            hintElement.textContent = message;
+            hintElement.className = `validation-hint validation-hint-${type}`;
+            hintElement.classList.remove('hidden');
+        }
+
+        function hideValidationHint() {
+            const hintElement = document.getElementById('validationHint');
+            if (hintElement) {
+                hintElement.classList.add('hidden');
+            }
+        }
+
+        async function handleQuerySubmit() {
+            const queryInput = document.getElementById('queryInput');
+            const query = queryInput.value;
+
+            // Task 4.1: Comprehensive input validation
+            const validationResult = validateQueryInput(query);
+            if (!validationResult.isValid) {
+                showValidationError(validationResult.errorMessage);
+                return;
+            }
+
+            // Show loading state (Task 3.2)
+            showLoading();
+
+            try {
+                // Call agent API (Task 3.1)
+                const result = await queryAgent(query);
+
+                if (result.error) {
+                    // Determine if this is a network error that supports retry/fallback
+                    const isNetworkError = result.error.includes('Network') ||
+                        result.error.includes('connection') ||
+                        result.error.includes('timeout') ||
+                        result.error.includes('server');
+
+                    if (isNetworkError) {
+                        showNetworkError(result.error, true, true);
+                    } else {
+                        showError(result.error);
+                    }
+                } else {
+                    // Display response (Task 3.3)
+                    displayResponse(result);
+                }
+            } catch (error) {
+                console.error('Error in handleQuerySubmit:', error);
+                showNetworkError('An unexpected error occurred. Please wait a moment and try again.', true, true);
+            } finally {
+                // Hide loading state
+                hideLoading();
+            }
+        }
+
+        // Task 3.2: Loading state management
+        let loadingStartTime = null;
+        let loadingInterval = null;
+
+        function showLoading() {
+            loadingStartTime = Date.now();
+
+            // Hide error messages and previous responses
+            hideError();
+            document.getElementById('responseContent').innerHTML = '';
+            document.getElementById('responseMeta').classList.add('hidden');
+
+            // Show loading indicator
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.classList.remove('hidden');
+
+            // Disable submit button to prevent multiple requests
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+
+            // Update loading message periodically
+            updateLoadingMessage();
+            loadingInterval = setInterval(updateLoadingMessage, 2000);
+
+            console.log('Loading state activated');
+        }
+
+        function hideLoading() {
+            // Hide loading indicator
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.classList.add('hidden');
+
+            // Re-enable submit button
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Ask Question';
+
+            // Clear loading interval
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+                loadingInterval = null;
+            }
+
+            console.log('Loading state deactivated');
+        }
+
+        // Task 4.2: Enhanced loading message with retry information
+        let currentRetryAttempt = 0;
+
+        function updateLoadingMessage() {
+            if (!loadingStartTime) return;
+
+            const elapsed = (Date.now() - loadingStartTime) / 1000;
+            const loadingText = document.querySelector('.loading-text');
+
+            if (!loadingText) return;
+
+            let message = '';
+
+            if (elapsed < 3) {
+                message = 'Retrieving facility information...';
+            } else if (elapsed < 6) {
+                message = 'Agent is analyzing information...';
+            } else if (elapsed < 10) {
+                message = 'Checking latest opening information...';
+            } else if (elapsed < 15) {
+                message = 'Preparing detailed response...';
+            } else if (elapsed < 25) {
+                message = 'Please wait a little longer...';
+            } else {
+                message = 'Processing is taking longer than expected. Checking connection...';
+            }
+
+            // Add retry information if applicable
+            if (currentRetryAttempt > 0) {
+                message += ` (Retry ${currentRetryAttempt}/2)`;
+            }
+
+            loadingText.textContent = message;
+        }
+
+        function setRetryAttempt(attempt) {
+            currentRetryAttempt = attempt;
+            updateLoadingMessage();
+        }
+
+        // Task 4.3: Enhanced error display functions
+        function showError(message, type = 'error', options = {}) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = errorMessage.querySelector('.error-text');
+            const errorActions = errorMessage.querySelector('.error-actions');
+            const errorIcon = errorMessage.querySelector('.error-icon');
+
+            // Clear previous error classes
+            errorMessage.className = 'error-message';
+
+            // Set error type styling
+            if (type !== 'error') {
+                errorMessage.classList.add(`error-${type}`);
+            }
+
+            // Set appropriate icon
+            switch (type) {
+                case 'warning':
+                    errorIcon.textContent = '⚠️';
+                    break;
+                case 'info':
+                    errorIcon.textContent = 'ℹ️';
+                    break;
+                default:
+                    errorIcon.textContent = '⚠️';
+            }
+
+            errorText.textContent = message;
+
+            // Handle action buttons
+            if (options.showActions) {
+                const retryBtn = document.getElementById('retryBtn');
+                const fallbackBtn = document.getElementById('fallbackBtn');
+
+                // Set up retry button
+                if (options.onRetry) {
+                    retryBtn.onclick = () => {
+                        hideError();
+                        options.onRetry();
+                    };
+                    retryBtn.style.display = 'inline-block';
+                } else {
+                    retryBtn.style.display = 'none';
+                }
+
+                // Set up fallback button
+                if (options.onFallback) {
+                    fallbackBtn.onclick = () => {
+                        hideError();
+                        options.onFallback();
+                    };
+                    fallbackBtn.style.display = 'inline-block';
+                } else {
+                    fallbackBtn.style.display = 'none';
+                }
+
+                errorActions.classList.remove('hidden');
+            } else {
+                errorActions.classList.add('hidden');
+            }
+
+            // Clear any previous response content
+            clearResponseContent();
+
+            // Show error message
+            errorMessage.classList.remove('hidden');
+
+            // Scroll to error message
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Auto-hide for info messages
+            if (type === 'info' && options.autoHide !== false) {
+                setTimeout(() => {
+                    if (!errorMessage.classList.contains('hidden')) {
+                        hideError();
+                    }
+                }, 5000);
+            }
+
+            console.error('Error displayed:', { message, type, options });
+        }
+
+        function hideError() {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.classList.add('hidden');
+
+            // Clear any pending auto-hide timeouts
+            clearTimeout(window.errorAutoHideTimeout);
+        }
+
+        // Task 4.3: Specialized error display functions
+        function showNetworkError(message, canRetry = false, canFallback = false) {
+            const options = {
+                showActions: canRetry || canFallback,
+                onRetry: canRetry ? () => {
+                    const queryInput = document.getElementById('queryInput');
+                    handleQuerySubmit();
+                } : null,
+                onFallback: canFallback ? () => {
+                    showInfo('Running in demo mode. The actual API is not available.', { autoHide: false });
+                } : null
+            };
+
+            showError(message, 'error', options);
+        }
+
+        function showValidationError(message) {
+            showError(message, 'warning');
+        }
+
+        function showInfo(message, options = {}) {
+            showError(message, 'info', options);
+        }
+
+        // Task 3.3: Response display functionality
+        function displayResponse(result) {
+            const responseContent = document.getElementById('responseContent');
+            const responseMeta = document.getElementById('responseMeta');
+            const responseTime = document.getElementById('responseTime');
+            const responseTimestamp = document.getElementById('responseTimestamp');
+
+            // Format and display the response text
+            const formattedResponse = formatResponseText(result.response);
+            responseContent.innerHTML = formattedResponse;
+
+            // Display response metadata
+            console.log('Response result:', result);
+            console.log('Response time value:', result.responseTime);
+            if (result.responseTime) {
+                responseTime.textContent = `Response time: ${result.responseTime.toFixed(2)}s`;
+                console.log('Response time displayed:', responseTime.textContent);
+            } else {
+                console.log('No responseTime in result');
+            }
+
+            if (result.timestamp) {
+                const timestamp = new Date(result.timestamp);
+                responseTimestamp.textContent = `Timestamp: ${formatTimestamp(timestamp)}`;
+            }
+
+            // Show metadata section
+            responseMeta.classList.remove('hidden');
+
+            // Scroll to response
+            responseContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            console.log('Response displayed successfully');
+        }
+
+        function formatResponseText(responseText) {
+            if (!responseText) return '';
+
+            // Handle both Japanese and English responses
+            let formatted = responseText;
+
+            // Convert line breaks to HTML
+            formatted = formatted.replace(/\n/g, '<br>');
+
+            // Format bullet points (both Japanese and English)
+            formatted = formatted.replace(/^[-・•]\s*/gm, '<span style="color: #667eea; font-weight: bold;">• </span>');
+
+            // Format numbered lists
+            formatted = formatted.replace(/^(\d+)\.\s*/gm, '<span style="color: #667eea; font-weight: bold;">$1. </span>');
+
+            // Format facility names (make them bold)
+            const facilityNames = [
+                '金沢21世紀美術館', '21st Century Museum',
+                '兼六園', 'Kenrokuen Garden', 'Kenrokuen',
+                '石川県立美術館', 'Ishikawa Prefectural Museum',
+                '金沢能楽美術館', 'Kanazawa Noh Museum',
+                '鈴木大拙館', 'D.T. Suzuki Museum',
+                '金沢市立中村記念美術館', 'Nakamura Memorial Museum',
+                '石川県立歴史博物館', 'Ishikawa Prefectural Museum of History'
+            ];
+
+            facilityNames.forEach(name => {
+                const regex = new RegExp(`(${name})`, 'gi');
+                formatted = formatted.replace(regex, '<strong style="color: #2c3e50;">$1</strong>');
+            });
+
+            // Format time information (make it more visible)
+            formatted = formatted.replace(/(\d{1,2}:\d{2}[-〜~]\d{1,2}:\d{2})/g, '<span style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px; font-weight: 500;">$1</span>');
+
+            // Format dates
+            formatted = formatted.replace(/(\d{1,2}月\d{1,2}日)/g, '<span style="color: #667eea; font-weight: 500;">$1</span>');
+
+            // Format status indicators
+            formatted = formatted.replace(/(開館中|開園中|営業中|Open|OPEN)/g, '<span style="color: #28a745; font-weight: bold; background: #d4edda; padding: 2px 6px; border-radius: 4px;">$1</span>');
+            formatted = formatted.replace(/(休館|休園|閉館|Closed|CLOSED)/g, '<span style="color: #dc3545; font-weight: bold; background: #f8d7da; padding: 2px 6px; border-radius: 4px;">$1</span>');
+
+            return formatted;
+        }
+
+        function formatTimestamp(date) {
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'Asia/Tokyo'
+            };
+
+            return date.toLocaleString('en-US', options);
+        }
+
+        // Task 4.3: Clear response content when showing errors
+        function clearResponseContent() {
+            document.getElementById('responseContent').innerHTML = '';
+            document.getElementById('responseMeta').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

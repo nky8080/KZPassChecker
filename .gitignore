@@ -91,6 +91,19 @@ secrets.*
 .aws/
 aws-exports.js
 
+# AWS Configuration (機密情報)
+deployment_info.json
+s3_config.json
+agentcore_layer_config.json
+.bedrock_agentcore.yaml
+upload_results.json
+api_gateway_config.json
+
+# Test results with sensitive data
+end_to_end_test_results.json
+*_test_results.json
+*_deployment_*.json
+
 # Test coverage
 htmlcov/
 .coverage
